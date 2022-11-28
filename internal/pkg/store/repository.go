@@ -3,7 +3,9 @@ package store
 import "github.com/antonovegorv/csgo-achievements/internal/pkg/models"
 
 // UserRepository ...
-type UserRepository interface{} //nolint:gofmt // will add methods later
+type UserRepository interface {
+	Create(*models.User) (*models.User, error)
+}
 
 // MatchRepository ...
 type MatchRepository interface {
@@ -18,6 +20,8 @@ type MatchHistoryRepository interface {
 
 // LastUserMatchRepository ...
 type LastUserMatchRepository interface {
+	Create(*models.LastUserMatch) error
+	FindByUserID(int) (*models.LastUserMatch, error)
 	GetAll() ([]*models.LastUserMatch, error)
 	UpdateByUserID(int, int) error
 }

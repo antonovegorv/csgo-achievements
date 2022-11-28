@@ -16,6 +16,54 @@ func NewLastUserMatchRepository(store *Store) *LastUserMatchRepository {
 	}
 }
 
+// Create ...
+func (r *LastUserMatchRepository) Create(lum *models.LastUserMatch) error {
+	if _, err := r.store.db.Exec(
+		`
+		INSERT INTO last_users_matches (user_id, match_id)
+		VALUES ($1, $2);
+		`,
+		lum.User.ID,
+		lum.Match.ID,
+	); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// FindByUserID ...
+func (r *LastUserMatchRepository) FindByUserID(userID int) (*models.LastUserMatch, error) {
+	lum := &models.LastUserMatch{
+		User:  &models.User{},
+		Match: &models.Match{},
+	}
+
+	if err := r.store.db.QueryRow(
+		`
+		SELECT u.*, m.* FROM users u
+		JOIN last_users_matches lum
+		ON u.id = lum.user_id AND u.id = $1
+		JOIN matches m ON
+		lum.match_id = m.id;
+		`,
+		userID,
+	).Scan(
+		&lum.User.ID,
+		&lum.User.SteamID,
+		&lum.User.GameAuthenticationCode,
+		&lum.Match.ID,
+		&lum.Match.ShareCode,
+		&lum.Match.MatchID,
+		&lum.Match.OutcomeID,
+		&lum.Match.TokenID,
+	); err != nil {
+		return nil, err
+	}
+
+	return lum, nil
+}
+
 // GetAll ...
 func (r *LastUserMatchRepository) GetAll() ([]*models.LastUserMatch, error) {
 	rows, err := r.store.db.Query(

@@ -6,3 +6,11 @@ type User struct {
 	SteamID                int
 	GameAuthenticationCode string
 }
+
+// TestUser ...
+func TestUser() *User {
+	return &User{
+		SteamID:                1234567890,
+		GameAuthenticationCode: "GAME-AUTH-CODE",
+	}
+}
