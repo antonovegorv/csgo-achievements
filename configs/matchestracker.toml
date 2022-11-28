@@ -1,0 +1,5 @@
+database_url = "host=localhost port=55000 user=postgres password=postgrespw dbname=postgres sslmode=disable"
+steam_api_key = "your_steam_api_key_here"
+steam_api_endpoint = "https://api.steampowered.com/ICSGOPlayers_730/GetNextMatchSharingCode/v1"
+ticker_timeout_in_seconds = 60
+logger_level = "debug"
